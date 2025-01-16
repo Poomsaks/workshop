@@ -1,0 +1,131 @@
+
+<p>Hello, World!</p>
+<button onclick="test_api()">Test API</button>
+<button onclick="send_test_api_ai()">Send-Test-API-AI</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat AI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+    .chat-container {
+      width: 50%;
+      margin: 50px auto;
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .messages {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+    }
+    .user-message,
+    .assistant-message {
+      margin: 10px 0;
+    }
+    .user-message {
+      text-align: right;
+    }
+    .assistant-message {
+      text-align: left;
+    }
+    .input-area {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .input-area input {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .input-area button {
+      width: 15%;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      background-color: #4caf50;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <h2>Chat AI</h2>
+    <div class="messages" id="messages"></div>
+    <div class="input-area">
+      <input type="text" id="messageInput" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+  <script>
+    function sendMessage() {
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value.trim();
+        
+        console.log('message', message)
+        if (message === '') return;
+        addMessage('user', message);
+        fetch('/send-test-api-ai', {
+            method: 'POST',
+            body: JSON.stringify({ message: message }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            addMessage('assistant', data.response);
+            messageInput.value = '';
+        })
+        .catch(error => console.error('Error:', error));
+    }
+    function test_api() {
+      fetch("/test-api", {
+        method: "POST",
+        body: JSON.stringify({ message: "Hello, World!" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("response", data);
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+    function send_test_api_ai() {
+      fetch("/send-test-api-ai", {
+        method: "POST",
+        body: JSON.stringify({ message: "สวัสดีครับ ผมชื่อภูมิศักดิ์" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("response", data);
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+    function addMessage(role, content) {
+        const messagesContainer = document.getElementById('messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add(role + '-message');
+        messageDiv.textContent = content;
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+  </script>
+</body>
