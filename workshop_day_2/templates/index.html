@@ -1,4 +1,3 @@
-
 <p>Hello, World!</p>
 <button onclick="test_api()">Test API</button>
 <button onclick="send_test_api_ai()">Send-Test-API-AI</button>
@@ -62,34 +61,76 @@
 </head>
 <body>
   <div class="chat-container">
+    <form
+      data-aos="fade-up"
+      data-aos-delay="400"
+      onsubmit="uploadFileAi(event)"
+    >
+      <div class="row gy-4">
+        <input
+          class="form-control"
+          type="file"
+          id="file"
+          name="file"
+          accept=".pdf"
+          required
+        />
+        <div class="col-md-12 text-center">
+          <button type="submit">Upload File</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="chat-container">
     <h2>Chat AI</h2>
     <div class="messages" id="messages"></div>
     <div class="input-area">
       <input type="text" id="messageInput" placeholder="Type your message..." />
-      <button onclick="sendMessage()">Send</button>
+      <button onclick="sendMessageFromFile()">Send</button>
     </div>
   </div>
   <script>
+    function sendMessageFromFile() {
+      const messageInput = document.getElementById("messageInput");
+      const message = messageInput.value.trim();
+
+      console.log("message", message);
+      if (message === "") return;
+      addMessage("user", message);
+      fetch("/send-api-ai-from-history", {
+        method: "POST",
+        body: JSON.stringify({ message: message }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          addMessage("assistant", data.response);
+          messageInput.value = "";
+        })
+        .catch((error) => console.error("Error:", error));
+    }
     function sendMessage() {
-        const messageInput = document.getElementById('messageInput');
-        const message = messageInput.value.trim();
-        
-        console.log('message', message)
-        if (message === '') return;
-        addMessage('user', message);
-        fetch('/send-test-api-ai', {
-            method: 'POST',
-            body: JSON.stringify({ message: message }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
+      const messageInput = document.getElementById("messageInput");
+      const message = messageInput.value.trim();
+
+      console.log("message", message);
+      if (message === "") return;
+      addMessage("user", message);
+      fetch("/send-test-api-ai", {
+        method: "POST",
+        body: JSON.stringify({ message: message }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          addMessage("assistant", data.response);
+          messageInput.value = "";
         })
-        .then(response => response.json())
-        .then(data => {
-            addMessage('assistant', data.response);
-            messageInput.value = '';
-        })
-        .catch(error => console.error('Error:', error));
+        .catch((error) => console.error("Error:", error));
     }
     function test_api() {
       fetch("/test-api", {
@@ -120,12 +161,23 @@
         .catch((error) => console.error("Error:", error));
     }
     function addMessage(role, content) {
-        const messagesContainer = document.getElementById('messages');
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add(role + '-message');
-        messageDiv.textContent = content;
-        messagesContainer.appendChild(messageDiv);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      const messagesContainer = document.getElementById("messages");
+      const messageDiv = document.createElement("div");
+      messageDiv.classList.add(role + "-message");
+      messageDiv.textContent = content;
+      messagesContainer.appendChild(messageDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+    async function uploadFileAi() {
+      event.preventDefault();
+      const formData = new FormData();
+      const fileInput = document.getElementById("file");
+      formData.append("file", fileInput.files[0]);
+
+      await fetch("/uploadFileAi", {
+        method: "POST",
+        body: formData,
+      });
     }
   </script>
 </body>

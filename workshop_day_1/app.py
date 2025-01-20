@@ -55,7 +55,8 @@ def send_test_api_ai():
         # จัดการข้อผิดพลาดและส่งกลับ
         print("Error generating response:", str(e))
         return jsonify({"error": "Unable to generate response", "details": str(e)}), 500
-    
+
+   
 # ตรวจสอบว่าไฟล์นี้ถูกรันโดยตรง
 if __name__ == "__main__":
     # เริ่มเซิร์ฟเวอร์ Flask บนพอร์ตที่กำหนด
