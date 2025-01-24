@@ -97,6 +97,27 @@
       console.log("message", message);
       if (message === "") return;
       addMessage("user", message);
+      fetch("/send-api-ai-from-file", {
+        method: "POST",
+        body: JSON.stringify({ message: message }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          addMessage("assistant", data.response);
+          messageInput.value = "";
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+    function sendMessageFromHistory() {
+      const messageInput = document.getElementById("messageInput");
+      const message = messageInput.value.trim();
+
+      console.log("message", message);
+      if (message === "") return;
+      addMessage("user", message);
       fetch("/send-api-ai-from-history", {
         method: "POST",
         body: JSON.stringify({ message: message }),
@@ -111,7 +132,7 @@
         })
         .catch((error) => console.error("Error:", error));
     }
-    function sendMessage() {
+    function sendMessageFromAI() {
       const messageInput = document.getElementById("messageInput");
       const message = messageInput.value.trim();
 

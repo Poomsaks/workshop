@@ -23,7 +23,7 @@ MODEL = "gemini-1.5-flash"
 genai.configure(api_key=api_key)
 logging.basicConfig(level=logging.INFO)
 
-UPLOAD_FOLDER = os.path.abspath("workshop_day_2/doc")
+UPLOAD_FOLDER = os.path.abspath("D:/udru_work_shop/day_1/workshop/workshop_day_2/doc")
 
 
 # เส้นทางหลักของเว็บแอป
@@ -74,7 +74,7 @@ def load_files_from_folder(folder_path):
     except Exception as e:
         print("Error loading files:", str(e))
     return data
-
+ 
 # เส้นทาง API send-api-ai-from-file
 @app.route("/send-api-ai-from-file", methods=["POST"])
 def send_api_ai_from_file():
